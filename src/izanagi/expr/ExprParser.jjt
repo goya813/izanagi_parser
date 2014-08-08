@@ -1,0 +1,118 @@
+//オプション定義
+options{
+	STATIC=false;
+	MULTI=true;
+	VISITOR=true;
+	NODE_EXTENDS="izanagi.expr.BaseNode";
+	DEBUG_PARSER = true;
+}
+
+//パーサークラスの定義
+PARSER_BEGIN(ExprParser)
+package izanagi.expr.parser;
+public class ExprParser{
+}
+PARSER_END(ExprParser)
+
+//トークンの定義
+SKIP:
+{
+	" " | "\r" | "\t" | "\n"
+}
+TOKEN:
+{
+		<PLUS : "+">
+	|   <MINUS: "-">
+	|	<MUL: "*">
+	|	<DIV: "/">
+	|	<MOD: "%">
+	|	<POWER: "^">
+	|	<AND: "And">
+	|	<OR: "Or">
+	|	<NOT: "Not">
+	|	<ASSIGN: "=">
+	|	<GE: ">=">
+	|	<GT: ">">
+	|	<LE: "<=">
+	|	<LT: "<">
+	|	<EQ: "==">
+	|	<NEQ: "!=">
+	|	<LPAREN: "(">
+	|	<RPAREN: ")">
+	|   <INTEGER: (["0" - "9"])+>
+	|	<FLOAT: (["0" - "9"])+ "." (["0" - "9"])+>
+}
+
+//文法の定義
+ASTStart Start():
+{}
+{
+	EqualCompExpr() { return jjtThis;}
+}
+
+
+void EqualCompExpr() #void:
+{}
+{
+	SizeCompExpr() (
+				<EQ> SizeCompExpr() #Eq(2)
+			|	<NEQ> SizeCompExpr() #NEq(2) )*
+}
+
+void SizeCompExpr() #void:
+{}
+{
+	AddExpr() (
+				<GE> AddExpr() #Ge(2)
+			|	<GT> AddExpr() #Gt(2)
+			|	<LE> AddExpr() #Le(2)
+			|	<LT> AddExpr() #Lt(2) )*
+}
+
+void AddExpr() #void:
+{}
+{
+	MulExpr() (
+				<PLUS>  MulExpr() #Add(2)
+			|   <MINUS> MulExpr() #Sub(2) )*
+}
+
+void MulExpr() #void:
+{}
+{
+	UniExpr() (
+				<MUL> UniExpr() #Mul(2)
+			|	<DIV> UniExpr() #Div(2)
+			|	<MOD> UniExpr() #Mod(2)
+			|	<POWER> UniExpr() #Power(2)
+			|	<AND> UniExpr() #And(2)
+			|	<OR> UniExpr() #Or(2)
+			|	<NOT> UniExpr() #Not(2) )*
+}
+
+void UniExpr():
+{ Token t;}
+{
+		Prime() {jjtThis.nodeValue = "+";}
+	|	t = <MINUS> {jjtThis.nodeValue = t.image;} Prime()
+}
+
+void Prime() #void:
+{}
+{
+		Integer()
+	|	Float()
+	|	<LPAREN> AddExpr() <RPAREN>
+}
+
+void Integer():
+{ Token t;}
+{
+	t = <INTEGER> { jjtThis.nodeValue = t.image;}
+}
+
+void Float():
+{ Token t;}
+{
+	t = <FLOAT> {jjtThis.nodeValue = t.image;}
+}
