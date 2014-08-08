@@ -1,6 +1,7 @@
 package izanagi.expr;
 
 import izanagi.expr.parser.*;
+import izanagi.expr.shell.*;
 import java.io.*;
 
 public class Expr implements ExprParserVisitor
@@ -30,264 +31,158 @@ public class Expr implements ExprParserVisitor
 
 	public Object visit(ASTEq node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Boolean && right instanceof Boolean){
-			Boolean bleft = new Boolean(left.toString());
-			Boolean bright = new Boolean(right.toString());
-			return (bleft.equals(bright));
-		}
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft.equals(fright));
-		}
+		left.EQ(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft.equals(iright));
+		return (left);
 	}
 
 	public Object visit(ASTNEq node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Boolean && right instanceof Boolean){
-			Boolean bleft = new Boolean(left.toString());
-			Boolean bright = new Boolean(right.toString());
-			return (!bleft.equals(bright));
-		}
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (!fleft.equals(fright));
-		}
+		left.NEQ(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (!ileft.equals(iright));
+		return (left);
 	}
 
 	public Object visit(ASTGe node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
+		
+		left.GE(right);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft >= fright);
-		}
-
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft >= iright);
+		return (left);
 	}
 	public Object visit(ASTGt node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft > fright);
-		}
+		left.GT(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft > iright);
+		return (left);
 	}
 	public Object visit(ASTLe node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft <= fright);
-		}
+		left.LE(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft <= iright);
+		return (left);
 	}
 	public Object visit(ASTLt node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft < fright);
-		}
+		left.LT(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft < iright);
+		return (left);
 	}
 
 	public Object visit(ASTAdd node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
-		
-		System.out.println("left  = " + left + " " + left.getClass().getName());
-		System.out.println("right = " + right + " " + right.getClass().getName());
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft + fright);
-		}
+		left.add(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft + iright);
+		return (left);
 	}
 
 	public Object visit(ASTSub node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft - fright);
-		}
+		left.sub(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft - iright);
+		return (left);
 	}
 
 	public Object visit(ASTMul node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft * fright);
-		}
+		left.mul(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft * iright);
+		return (left);
 	}
 
 	public Object visit(ASTDiv node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft / fright);
-		}
+		left.div(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft / iright);
+		return (left);
 	}
 
 	public Object visit(ASTMod node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (fleft % fright);
-		}
+		left.mod(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return (ileft % iright);
+		return (left);
 	}
 
 	public Object visit(ASTPower node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		if (left instanceof Float || right instanceof Float){
-			Float fleft = new Float(left.toString());
-			Float fright = new Float(right.toString());
-			return (Math.pow(fleft, fright));
-		}
+		left.power(right);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
-
-		return ((int)Math.pow(ileft, iright));
+		return (left);
 	}
 
 	public Object visit(ASTAnd node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
+		left.and(right);
 
-		return (ileft & iright);
+		return (left);
 	}
 
 	public Object visit(ASTOr node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
+		left.or(right);
 
-		return (ileft | iright);
+		return (left);
 	}
 
 	public Object visit(ASTNot node, Object data)
 	{
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
-		Object right = node.jjtGetChild(1).jjtAccept(this, null);
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
+		ShellValue right = (ShellValue)node.jjtGetChild(1).jjtAccept(this, null);
 
-		Integer ileft = new Integer(left.toString());
-		Integer iright = new Integer(right.toString());
+		left.not(right);
 
-		return (ileft ^ iright);
+		return (left);
 	}
 
 	public Object visit(ASTUniExpr node, Object data)
 	{
+		ShellValue left = (ShellValue)node.jjtGetChild(0).jjtAccept(this, null);
 		String value = node.nodeValue;
-		Object left = node.jjtGetChild(0).jjtAccept(this, null);
 
 		if (value.equals("-")){
-			if (left instanceof Float){
-				Float fleft = new Float(left.toString());
-				return (-1 * fleft);
-			}
-
-			Integer ileft = new Integer(left.toString());
-			return (-1 * ileft);
+			left.minus();
 		}
 
 		return (left);
@@ -295,14 +190,12 @@ public class Expr implements ExprParserVisitor
 
 	public Object visit(ASTInteger node, Object data)
 	{
-		String value = node.nodeValue;
-		return (Integer.valueOf(value));
+		return (new ShellValue(node.nodeValue, ShellValue.TYPE_INTEGER));
 	}
 
 	public Object visit(ASTFloat node, Object data)
 	{
-		String value = node.nodeValue;
-		return (Float.valueOf(value));
+		return (new ShellValue(node.nodeValue, ShellValue.TYPE_FLOAT));
 	}
 
 }
